@@ -1,16 +1,17 @@
 package org.smartinrub.welcomeservice;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.apache.tomcat.websocket.Constants;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.UnsupportedEncodingException;
 
 import static org.smartinrub.welcomeservice.SecurityConstants.HEADER_STRING;
 
+@CrossOrigin(origins = "*")
 @RestController("/login")
 public class LoginController {
 
@@ -22,16 +23,21 @@ public class LoginController {
     private RestTemplate restTemplate = new RestTemplate();
 
     @PostMapping
-    public String login(@RequestBody @Valid User user, HttpServletResponse response) throws UnsupportedEncodingException {
+    @ResponseBody
+    public ResponseEntity<String> login(@RequestBody @Valid User user) {
 
         String email = user.getEmail();
         String password = user.getPassword();
 
         if (!EMAIL.equals(email) || !PASSWORD.equals(password)) {
-            return "Incorrect Email and/or password!";
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Incorrect Email and/or password!");
         }
 
-        return restTemplate.postForEntity(AUTH_URL, USERNAME,
-                String.class).getHeaders().getFirst(HEADER_STRING);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(Constants.AUTHORIZATION_HEADER_NAME, restTemplate.postForEntity(AUTH_URL, USERNAME,
+                String.class).getHeaders().getFirst(HEADER_STRING));
+        System.out.println(ResponseEntity.ok().headers(headers).body("Successful Login"));
+
+        return ResponseEntity.ok().headers(headers).body("Successful Login");
     }
 }
