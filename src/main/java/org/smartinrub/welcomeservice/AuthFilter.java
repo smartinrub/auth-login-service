@@ -12,6 +12,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+import static org.apache.tomcat.websocket.Constants.AUTHORIZATION_HEADER_NAME;
 import static org.smartinrub.welcomeservice.SecurityConstants.*;
 
 public class AuthFilter extends GenericFilterBean {
@@ -22,7 +23,7 @@ public class AuthFilter extends GenericFilterBean {
 
         final HttpServletRequest request = (HttpServletRequest) req;
 
-        final String authHeader = request.getHeader(HEADER_STRING);
+        final String authHeader = request.getHeader(AUTHORIZATION_HEADER_NAME);
 
         if (authHeader == null || !authHeader.startsWith(TOKEN_PREFIX)) {
             throw new ServletException("Token not found");

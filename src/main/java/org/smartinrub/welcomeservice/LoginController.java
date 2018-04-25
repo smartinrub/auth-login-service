@@ -1,29 +1,29 @@
 package org.smartinrub.welcomeservice;
 
-import org.apache.tomcat.websocket.Constants;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import javax.validation.Valid;
 
-import static org.smartinrub.welcomeservice.SecurityConstants.HEADER_STRING;
+import static org.apache.tomcat.websocket.Constants.AUTHORIZATION_HEADER_NAME;
 
-@CrossOrigin(origins = "*")
 @RestController("/login")
+@CrossOrigin
 public class LoginController {
 
-    private static final String EMAIL = "email@domain.com";
-    private static final String PASSWORD = "Password1";
+    private static final String EMAIL = "a@a.com";
+    private static final String PASSWORD = "a";
     private static final String USERNAME = "Sergio";
     private static final String AUTH_URL =  "http://localhost:8090/add";
 
     private RestTemplate restTemplate = new RestTemplate();
 
     @PostMapping
-    @ResponseBody
     public ResponseEntity<String> login(@RequestBody @Valid User user) {
 
         String email = user.getEmail();
@@ -33,11 +33,7 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Incorrect Email and/or password!");
         }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(Constants.AUTHORIZATION_HEADER_NAME, restTemplate.postForEntity(AUTH_URL, USERNAME,
-                String.class).getHeaders().getFirst(HEADER_STRING));
-        System.out.println(ResponseEntity.ok().headers(headers).body("Successful Login"));
-
-        return ResponseEntity.ok().headers(headers).body("Successful Login");
+        return ResponseEntity.ok().body(restTemplate.postForEntity(AUTH_URL, USERNAME,
+                String.class).getHeaders().getFirst(AUTHORIZATION_HEADER_NAME));
     }
 }
