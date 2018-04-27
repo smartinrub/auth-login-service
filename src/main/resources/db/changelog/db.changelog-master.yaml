@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: sergio
+      changes:
+        - createTable:
+            tableName: user
+            columns:
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: profession
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+
+  - changeSet:
+        id: 2
+        author: sergio
+        changes:
+          - insert:
+              tableName: user
+              columns:
+                - column:
+                    name: email
+                    value: test@test.com
+                - column:
+                    name: password
+                    value: pass
+                - column:
+                    name: profession
+                    value: Software Engineer

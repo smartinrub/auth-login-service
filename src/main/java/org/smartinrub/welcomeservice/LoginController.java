@@ -10,18 +10,23 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.validation.Valid;
 
+import java.util.Optional;
+
 import static org.apache.tomcat.websocket.Constants.AUTHORIZATION_HEADER_NAME;
 
 @RestController("/login")
 @CrossOrigin
 public class LoginController {
 
-    private static final String EMAIL = "a@a.com";
-    private static final String PASSWORD = "a";
-    private static final String USERNAME = "Sergio";
     private static final String AUTH_URL =  "http://localhost:8090/add";
 
     private RestTemplate restTemplate = new RestTemplate();
+
+    private final UserRepository userRepository;
+
+    public LoginController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @PostMapping
     public ResponseEntity<String> login(@RequestBody @Valid User user) {
@@ -29,11 +34,17 @@ public class LoginController {
         String email = user.getEmail();
         String password = user.getPassword();
 
-        if (!EMAIL.equals(email) || !PASSWORD.equals(password)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Incorrect Email and/or password!");
+        Optional<User> dbUser = userRepository.findById(email);
+
+        if (!dbUser.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
         }
 
-        return ResponseEntity.ok().body(restTemplate.postForEntity(AUTH_URL, USERNAME,
+        if (!password.equals(dbUser.get().getPassword())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Wrong password!");
+        }
+
+        return ResponseEntity.ok().body(restTemplate.postForEntity(AUTH_URL, dbUser.get().getProfession(),
                 String.class).getHeaders().getFirst(AUTHORIZATION_HEADER_NAME));
     }
 }
