@@ -1,4 +1,4 @@
-package org.smartinrub.welcomeservice;
+package org.smartinrub.welcomeservice.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

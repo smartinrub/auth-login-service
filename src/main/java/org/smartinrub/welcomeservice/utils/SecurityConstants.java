@@ -1,4 +1,4 @@
-package org.smartinrub.welcomeservice;
+package org.smartinrub.welcomeservice.utils;
 
 public class SecurityConstants {
     public static final String JWT_SECRET = "secret";

@@ -1,5 +1,7 @@
-package org.smartinrub.welcomeservice;
+package org.smartinrub.welcomeservice.controllers;
 
+import org.smartinrub.welcomeservice.models.User;
+import org.smartinrub.welcomeservice.repositories.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -9,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import javax.validation.Valid;
-
 import java.util.Optional;
 
 import static org.apache.tomcat.websocket.Constants.AUTHORIZATION_HEADER_NAME;
@@ -44,7 +45,8 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Wrong password!");
         }
 
-        return ResponseEntity.ok().body(restTemplate.postForEntity(AUTH_URL, dbUser.get().getProfession(),
+        return ResponseEntity.ok()
+                .body(restTemplate.postForEntity(AUTH_URL, email + "-" + dbUser.get().getProfession(),
                 String.class).getHeaders().getFirst(AUTHORIZATION_HEADER_NAME));
     }
 }

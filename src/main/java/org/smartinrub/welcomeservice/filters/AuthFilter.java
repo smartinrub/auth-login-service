@@ -1,4 +1,4 @@
-package org.smartinrub.welcomeservice;
+package org.smartinrub.welcomeservice.filters;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 import static org.apache.tomcat.websocket.Constants.AUTHORIZATION_HEADER_NAME;
-import static org.smartinrub.welcomeservice.SecurityConstants.*;
+import static org.smartinrub.welcomeservice.utils.SecurityConstants.*;
 
 public class AuthFilter extends GenericFilterBean {
 
